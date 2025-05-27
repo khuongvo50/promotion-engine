@@ -15,19 +15,14 @@ public class FixedAmountHandler implements PromotionRuleHandler {
     public PromotionResult apply(PromotionContext context, PromotionRule rule) {
         Map<String, Object> params = rule.getParams();
 
-        BigDecimal minSpend = new BigDecimal(params.getOrDefault("minSpend", 0).toString());
         BigDecimal amount = new BigDecimal(params.getOrDefault("amount", 0).toString());
 
-        if (context.getTotalAmount().compareTo(minSpend) >= 0) {
-            return new PromotionResult(
-                    rule.getCode(),
-                    amount, // discount
-                    BigDecimal.ZERO, // shipping
-                    0, 0,
-                    "Giảm " + amount + " cho đơn từ " + minSpend
-            );
-        }
-
-        return null;
+        return new PromotionResult(
+                rule.getCode(),
+                amount,
+                BigDecimal.ZERO,
+                0, 0,
+                "Giảm " + amount + " theo rule " + rule.getCode()
+        );
     }
 }

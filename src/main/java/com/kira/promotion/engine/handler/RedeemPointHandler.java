@@ -15,23 +15,19 @@ public class RedeemPointHandler implements PromotionRuleHandler {
     public PromotionResult apply(PromotionContext context, PromotionRule rule) {
         Map<String, Object> params = rule.getParams();
 
-        int maxPoint = Integer.parseInt(params.getOrDefault("maxPoint", 0).toString());
-        int ratio = Integer.parseInt(params.getOrDefault("pointToCashRate", 100).toString()); // 100 xu = 1k
+        int usedPoint = Math.min(context.getAvailablePoints(),
+                Integer.parseInt(params.getOrDefault("maxPoint", 0).toString()));
+        int rate = Integer.parseInt(params.getOrDefault("pointToCashRate", 100).toString());
 
-        int usablePoint = Math.min(context.getAvailablePoints(), maxPoint);
-        BigDecimal discount = new BigDecimal(usablePoint).divide(new BigDecimal(ratio));
+        BigDecimal discount = new BigDecimal(usedPoint).divide(new BigDecimal(rate));
 
-        if (usablePoint > 0) {
-            return new PromotionResult(
-                    rule.getCode(),
-                    discount,
-                    BigDecimal.ZERO,
-                    0,
-                    usablePoint,
-                    "Dùng " + usablePoint + " xu để giảm " + discount + " đ"
-            );
-        }
-
-        return null;
+        return new PromotionResult(
+                rule.getCode(),
+                discount,
+                BigDecimal.ZERO,
+                0,
+                usedPoint,
+                "Dùng " + usedPoint + " xu để giảm " + discount + " theo rule " + rule.getCode()
+        );
     }
 }

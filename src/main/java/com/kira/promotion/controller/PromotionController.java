@@ -15,8 +15,8 @@ public class PromotionController {
 
     private final PromotionService promotionService;
 
-    @PostMapping("/apply")
-    public List<PromotionResult> apply(@RequestBody PromotionContext context) {
-        return promotionService.applyPromotions(context);
+    @PostMapping("/auto-suggest")
+    public List<PromotionResult> autoSuggest(@RequestBody PromotionContext context) {
+        return promotionService.autoSuggest(context);
     }
 }
